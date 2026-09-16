@@ -209,7 +209,6 @@ int getMaxDegree(const char* str) {
 
 /* ===================== (6) 노드 C의 부모 노드 ===================== */
 /* "노드 스택": 현재까지 열려 있는 조상 노드 문자를 담는 스택. 
- *
  * 반환값: 1이면 target을 찾음(부모 문자를 parentOut에 저장, 없으면 '\0'),
  *         0이면 문자열에 target 자체가 없음. */
 int findParent(const char* str, char target, char* parentOut) {
@@ -241,8 +240,7 @@ int findParent(const char* str, char target, char* parentOut) {
 
 /* ===================== (7) 노드 C의 자식 노드 ===================== */
 /* "카운터 스택": target 노드의 '(' 부터 시작해서, 괄호 깊이를 추적하는
- * 카운터를 스택에 쌓음. 
- *
+ *               카운터를 스택에 쌓음. 
  * 반환값: 자식 수 (0이면 단말 노드, -1이면 target이 문자열에 없음). */
 int findChildren(const char* str, char target, char result[], int maxResult) {
     int len = (int)strlen(str);
@@ -305,7 +303,6 @@ int hasNextSibling(const char* str, int pos) {
 
 /* hasMore[d]: 깊이 d에 있는(현재 경로상의) 조상이 
  *             형제를 더 가지고 있는지를 기록해 두는 배열.
- *
  * maxDepth: hasMore 배열의 크기, 
  *           방어적으로 depth가 이를 넘어서면 그 지점에서 멈춤.
  */

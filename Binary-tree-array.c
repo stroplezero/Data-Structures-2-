@@ -293,7 +293,7 @@ static void print_info(const ArrTree *t)
     printf("1. 전체 노드의 수     : %d\n", info.nodes);
     printf("2. 단말 노드의 수     : %d\n", info.leaves);
     printf("3. 비단말 노드의 수   : %d\n", info.nonleaves);
-    printf("4. 트리의 높이        : %d (루트의 레벨을 1로 계산)\n", info.height);
+    printf("4. 트리의 높이        : %d\n", info.height);
     printf("5. 트리의 차수        : %d\n", info.degree);
 }
 

@@ -192,22 +192,22 @@
 ## 5. 관련 자료
 [배열]
 - 포화 이진트리
-![배열포화](https://github.com/user-attachments/assets/2f13bee7-e851-4a1f-b675-41b4e83004c0)
-![배열포화프로파일러](https://github.com/user-attachments/assets/a9adcdac-0b77-4c19-8f06-e8e0f3fee93c)
+ ![배열포화](https://github.com/user-attachments/assets/2f13bee7-e851-4a1f-b675-41b4e83004c0)
+ ![배열포화프로파일러](https://github.com/user-attachments/assets/a9adcdac-0b77-4c19-8f06-e8e0f3fee93c)
 - 완전 이진트리
-![배열완전](https://github.com/user-attachments/assets/9d162e7e-aa7c-49b6-be8e-de55419686b1)
-![배열완전프로파일러](https://github.com/user-attachments/assets/d1702351-7e74-49e9-9dd8-e1f9f01bf182)
+ ![배열완전](https://github.com/user-attachments/assets/9d162e7e-aa7c-49b6-be8e-de55419686b1)
+ ![배열완전프로파일러](https://github.com/user-attachments/assets/d1702351-7e74-49e9-9dd8-e1f9f01bf182)
 - 편향 이진트리
-![배열편향](https://github.com/user-attachments/assets/3e73595f-8a35-4992-b0ff-bd1f0f2f5f47)
-![배열편향프로파일러](https://github.com/user-attachments/assets/6bda281b-038e-4632-936d-e2c4a5e9a3da)
+ ![배열편향](https://github.com/user-attachments/assets/3e73595f-8a35-4992-b0ff-bd1f0f2f5f47)
+ ![배열편향프로파일러](https://github.com/user-attachments/assets/6bda281b-038e-4632-936d-e2c4a5e9a3da)
 
  [포인터]
 - 포화 이진트리
-![포인터포화](https://github.com/user-attachments/assets/614ba5bb-5c18-4a6b-aa7c-681ea97b13db)
-![포인터포화프로파일러](https://github.com/user-attachments/assets/b4b70e4f-7beb-408f-8d16-d13717cc9ce8)
+ ![포인터포화](https://github.com/user-attachments/assets/614ba5bb-5c18-4a6b-aa7c-681ea97b13db)
+ ![포인터포화프로파일러](https://github.com/user-attachments/assets/b4b70e4f-7beb-408f-8d16-d13717cc9ce8)
 - 완전 이진트리
-![포인터완전](https://github.com/user-attachments/assets/85c6649d-514a-41a2-9077-01191b2b8050)
-![포인터완전프로파일러](https://github.com/user-attachments/assets/2f8b1e71-86ef-482d-ada4-4b009d4ba503)
+ ![포인터완전](https://github.com/user-attachments/assets/85c6649d-514a-41a2-9077-01191b2b8050)
+ ![포인터완전프로파일러](https://github.com/user-attachments/assets/2f8b1e71-86ef-482d-ada4-4b009d4ba503)
 - 편향 이진트리
-![포인터편향](https://github.com/user-attachments/assets/fe398cea-bfd4-4113-a471-ef1fb40b163d)
-![포인터편향프로파일러](https://github.com/user-attachments/assets/b13f2208-6a23-4eef-ac72-dcd7cd118d25)
+ ![포인터편향](https://github.com/user-attachments/assets/fe398cea-bfd4-4113-a471-ef1fb40b163d)
+ ![포인터편향프로파일러](https://github.com/user-attachments/assets/b13f2208-6a23-4eef-ac72-dcd7cd118d25)

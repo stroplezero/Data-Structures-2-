@@ -3,10 +3,10 @@
  기존에 구현한 배열과 연결자료형 이진트리에 메모리 사용량을 구하는 기능과 노드 관계 조회 기능을 추가하였다. 
 
 ## 1. 코드 구현
-| 파일 | 설명 |
-|---|---|
-| `binary_tree.c` | 배열 구현 |
-| `binary_tree_ptr.c` | 포인터(연결 자료형) 구현 |
+| 파일 | 설명 | 링크 |
+|---|---|---|
+| `Binary-Tree-Array_v2.c` | 배열 구현 | https://github.com/stroplezero/Data-Structures-2-/blob/main/Project2/Binary-Tree-Array_v2.c |
+| `Binary-Tree-Ptr_v2.c` | 포인터(연결 자료형) 구현 | https://github.com/stroplezero/Data-Structures-2-/blob/main/Project2/Binary-Tree-Ptr_v2.c |
 - 한글이 깨질 경우, 소스 파일을 "UTF-8 (서명 포함)"으로 저장한다.
 
 두 프로그램은 입력 형식, 출력 형식, 오류 처리가 동일하며 아래 기능을 순서대로 수행한다.
@@ -66,7 +66,6 @@
 | 편향 | 왼쪽 24개 | 24 | 24 | 8,388,609 |  576 |  14,563배 |
 | 편향 | 오른쪽 24개 | 24 | 24 | 16,777,216 |  576 |  29,127배 |
 
-- **활용률**: 배열의 1~`max_idx`번 칸 중 노드가 채운 비율
 - **배열 ÷ 포인터**: 1보다 작으면 배열이, 크면 포인터가 메모리를 적게 쓴다.
 
 ### 2.4 프로파일러 교차 검증

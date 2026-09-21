@@ -18,6 +18,7 @@
 | `Binary-Tree-Ptr_v2.c` | 포인터(연결 자료형) 구현 | https://github.com/stroplezero/Data-Structures-2-/blob/main/Project2/Binary-Tree-Ptr_v2.c |
 - 한글이 깨질 경우, 소스 파일을 "UTF-8 (서명 포함)"으로 저장한다.
 
+
 두 프로그램은 입력 형식, 출력 형식, 오류 처리가 동일하며 아래 기능을 순서대로 수행한다.
 
 | 번호 | 기능 |

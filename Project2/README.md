@@ -85,26 +85,12 @@
 
 </details>
 
-[관련 자료]
-![배열포화](https://github.com/user-attachments/assets/3da089dc-b53c-44e6-b347-4e534c0593b9)
-![배열포화프로파일러](https://github.com/user-attachments/assets/a9adcdac-0b77-4c19-8f06-e8e0f3fee93c)
-![배열완전](https://github.com/user-attachments/assets/9d162e7e-aa7c-49b6-be8e-de55419686b1)
-![배열완전프로파일러](https://github.com/user-attachments/assets/d1702351-7e74-49e9-9dd8-e1f9f01bf182)
-![배열편향](https://github.com/user-attachments/assets/3e73595f-8a35-4992-b0ff-bd1f0f2f5f47)
-![배열편향프로파일러](https://github.com/user-attachments/assets/6bda281b-038e-4632-936d-e2c4a5e9a3da)
-
-![포인터포화](https://github.com/user-attachments/assets/614ba5bb-5c18-4a6b-aa7c-681ea97b13db)
-![포인터포화프로파일러](https://github.com/user-attachments/assets/b4b70e4f-7beb-408f-8d16-d13717cc9ce8)
-![포인터완전](https://github.com/user-attachments/assets/85c6649d-514a-41a2-9077-01191b2b8050)
-![포인터완전프로파일러](https://github.com/user-attachments/assets/2f8b1e71-86ef-482d-ada4-4b009d4ba503)
-![포인터편향](https://github.com/user-attachments/assets/fe398cea-bfd4-4113-a471-ef1fb40b163d)
-![포인터편향프로파일러](https://github.com/user-attachments/assets/b13f2208-6a23-4eef-ac72-dcd7cd118d25)
-
 | 입력 | 배열 | 포인터 |
 |---|---|---|
 | 완전 (포화 15개) | 약 764 KB | 약 764 KB |
 | 완전 (24개) | 약 772 KB | 약 756 KB |
 | 편향 (오른쪽 24개) | **약 17 MB** | 약 776 KB |
+- 실제 스크린샷은 5. [관련 자료](##5-관련-자료) 참고.
 
 - 자료구조가 수백 바이트인 경우에는 기본 사용량에 묻혀 구현 간 차이를 구분할 수 없다. 따라서 분석의 주 근거는 프로그램이 계산한 값(2.3)을 사용했다.
 - 편향 트리의 배열은 프로파일러에서도 명확하게 커졌다. 약 17 MB에서 기본 사용량 약 0.77 MB를 빼면 약 16.23 MB로, 계산값 16,777,216 B(약 16 MB)와 유사한 규모라 할 수 있다.
@@ -201,3 +187,28 @@
 - 배열 구현의 효율은 **트리가 얼마나 빈틈없이 채워졌는지**에 달려 있다. 완전 트리라면 메모리와 조회 속도 모두에서 가장 효율적이지만, 편향·희소 트리에서는 메모리와 탐색 비용이 노드 수의 지수 배로 늘어난다.
 - 포인터 구현은 노드마다 고정 비용(포인터 2개)이 들지만 **모양과 무관**하게 노드 수에 비례하므로 어떤 트리에서도 안정적이다. 부모·형제 조회는 부모 포인터를 추가해 보완할 수 있다.
 - 따라서 "어느 구현이 더 효율적인가"는 트리의 모양에 따라 달라지며, 완전·포화 이진트리에는 배열을, 편향 트리에는 포인터를 선택하는 것이 합리적이라 할 수 있다.
+
+---
+
+## 5. 관련 자료
+[배열]
+- 포화 이진트리
+![배열포화](https://github.com/user-attachments/assets/2f13bee7-e851-4a1f-b675-41b4e83004c0)
+![배열포화프로파일러](https://github.com/user-attachments/assets/a9adcdac-0b77-4c19-8f06-e8e0f3fee93c)
+- 완전 이진트리
+![배열완전](https://github.com/user-attachments/assets/9d162e7e-aa7c-49b6-be8e-de55419686b1)
+![배열완전프로파일러](https://github.com/user-attachments/assets/d1702351-7e74-49e9-9dd8-e1f9f01bf182)
+- 편향 이진트리
+![배열편향](https://github.com/user-attachments/assets/3e73595f-8a35-4992-b0ff-bd1f0f2f5f47)
+![배열편향프로파일러](https://github.com/user-attachments/assets/6bda281b-038e-4632-936d-e2c4a5e9a3da)
+
+ [포인터]
+ - 포화 이진트리
+![포인터포화](https://github.com/user-attachments/assets/614ba5bb-5c18-4a6b-aa7c-681ea97b13db)
+![포인터포화프로파일러](https://github.com/user-attachments/assets/b4b70e4f-7beb-408f-8d16-d13717cc9ce8)
+- 완전 이진트리
+![포인터완전](https://github.com/user-attachments/assets/85c6649d-514a-41a2-9077-01191b2b8050)
+![포인터완전프로파일러](https://github.com/user-attachments/assets/2f8b1e71-86ef-482d-ada4-4b009d4ba503)
+- 편향 이진트리
+![포인터편향](https://github.com/user-attachments/assets/fe398cea-bfd4-4113-a471-ef1fb40b163d)
+![포인터편향프로파일러](https://github.com/user-attachments/assets/b13f2208-6a23-4eef-ac72-dcd7cd118d25)

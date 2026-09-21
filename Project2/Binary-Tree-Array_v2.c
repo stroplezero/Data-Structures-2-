@@ -1,25 +1,3 @@
-/*
- * 이진트리 (괄호 표기법 입력, 배열 표현)
- *
- * 입력 예)  A(B(E,F),C(,G))     ← C의 왼쪽 자식이 없고 오른쪽 자식만 G
- *
- * 배열 표현: 1-based 인덱스
- *   루트 = 1, 노드 i의 왼쪽 자식 = 2*i, 오른쪽 자식 = 2*i+1
- *   빈 칸은 '\0'
- *
- * 트리를 입력하면 아래 항목을 차례로 출력한다.
- *   [1] 이진트리 출력 (왼쪽으로 눕힌 계층 형태)
- *   [2] 트리 정보 출력 (노드 수, 단말/비단말 수, 높이, 차수)
- *   [3] 이진트리 형태 판별 (완전 / 포화 / 편향)
- *   [4] 메모리 사용량
- *   [5] 노드 조회: 입력한 노드의 자식, 부모, 형제 출력 (빈 줄을 입력할 때까지 반복)
- *
- * 처리하는 오류
- *   - 입력: 빈 입력, 너무 긴 입력, EOF(입력 종료)
- *   - 문법: 대문자 아닌 문자, 빈 괄호, 자식 3개 이상, 괄호 짝 불일치,
- *           쉼표 누락/중복, 트리 뒤의 불필요한 문자, 노드 중복
- *   - 자원: 배열로 표현할 수 없을 만큼 깊은 트리, 메모리 할당 실패
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -150,19 +128,19 @@ static int parse_node(ArrTree *t, int idx)
     t->a[idx] = c;
     pos++;
     skip_ws();
-    if (src[pos] != '(') return 1;      /* 자식 없음 */
+    if (src[pos] != '(') return 1;    
     pos++;
     skip_ws();
 
     if (src[pos] == ')')
         return fail("빈 괄호는 사용할 수 없습니다");
 
-    if (src[pos] != ',') {              /* 왼쪽 자식 */
+    if (src[pos] != ',') {         
         if (!parse_node(t, 2 * idx)) return 0;
         kids++;
         skip_ws();
     }
-    if (src[pos] == ',') {              /* 오른쪽 자식 */
+    if (src[pos] == ',') {             
         pos++;
         skip_ws();
         if (src[pos] != ')') {
@@ -343,8 +321,8 @@ static int skew_type(const ArrTree *t)
     if (t->n < 2) return 0;
     for (int i = 1; i <= t->max_idx; i++) {
         if (!has(t, i)) continue;
-        if (has(t, 2 * i + 1)) left_only = 0;   /* 오른쪽 자식이 있으면 왼쪽 편향 아님 */
-        if (has(t, 2 * i))     right_only = 0;  /* 왼쪽 자식이 있으면 오른쪽 편향 아님 */
+        if (has(t, 2 * i + 1)) left_only = 0;   
+        if (has(t, 2 * i))     right_only = 0;  
     }
     return left_only ? 1 : (right_only ? 2 : 0);
 }
@@ -425,7 +403,7 @@ static void query_node(const ArrTree *t, char target)
         return;
     }
 
-    /* 부모 위치 i/2, 형제 위치 i^1, 자식 위치 2i, 2i+1은 계산만으로 구해진다 */
+    /* 부모 위치 i/2, 형제 위치 i^1, 자식 위치 2i, 2i+1은 계산만으로 구해짐 */
     g_steps = 0;
     left  = slot(t, 2 * i);
     right = slot(t, 2 * i + 1);

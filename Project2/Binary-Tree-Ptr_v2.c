@@ -1,27 +1,3 @@
-/*
- * 이진트리 (괄호 표기법 입력, 포인터 표현)
- *
- * 입력 예)  A(B(E,F),C(,G))     ← C의 왼쪽 자식이 없고 오른쪽 자식만 G
- *
- * 포인터 표현: 노드마다 데이터와 왼쪽/오른쪽 자식 포인터를 가진다.
- *   자식이 없으면 NULL
- *
- * 트리를 입력하면 아래 항목을 차례로 출력한다.
- *   [1] 이진트리 출력 (왼쪽으로 눕힌 계층 형태)
- *   [2] 트리 정보 출력 (노드 수, 단말/비단말 수, 높이, 차수)
- *   [3] 이진트리 형태 판별 (완전 / 포화 / 편향)
- *   [4] 메모리 사용량
- *   [5] 노드 조회: 입력한 노드의 자식, 부모, 형제 출력 (빈 줄을 입력할 때까지 반복)
- *
- * WITH_PARENT: 0이면 노드에 부모 포인터가 없고(부모는 루트부터 탐색),
- *              1이면 노드에 부모 포인터를 추가한다. 두 경우를 비교할 때 사용한다.
- *
- * 처리하는 오류
- *   - 입력: 빈 입력, 너무 긴 입력, EOF(입력 종료)
- *   - 문법: 대문자 아닌 문자, 빈 괄호, 자식 3개 이상, 괄호 짝 불일치,
- *           쉼표 누락/중복, 트리 뒤의 불필요한 문자, 노드 중복
- *   - 자원: 메모리 할당 실패 (오류가 나면 이미 만든 노드를 모두 해제)
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,7 +105,6 @@ static void skip_ws(void)
 
 /*
  * 노드 하나를 읽어 만들고, 자식이 있으면 재귀로 연결한다.
- *   node := 대문자 [ '(' [left] [ ',' [right] ] ')' ]
  * 성공하면 노드 포인터, 실패하면 NULL (이미 만든 노드는 모두 해제됨)
  */
 static Node *parse_node(void)
@@ -156,14 +131,14 @@ static Node *parse_node(void)
     n->data = c;
     pos++;
     skip_ws();
-    if (src[pos] != '(') return n;      /* 자식 없음 */
+    if (src[pos] != '(') return n;    
     pos++;
     skip_ws();
 
     if (src[pos] == ')')
         return fail(n, "빈 괄호는 사용할 수 없습니다");
 
-    if (src[pos] != ',') {              /* 왼쪽 자식 */
+    if (src[pos] != ',') {           
         n->left = parse_node();
         if (!n->left) return discard(n);
 #if WITH_PARENT
@@ -171,7 +146,7 @@ static Node *parse_node(void)
 #endif
         skip_ws();
     }
-    if (src[pos] == ',') {              /* 오른쪽 자식 */
+    if (src[pos] == ',') {             
         pos++;
         skip_ws();
         if (src[pos] != ')') {
@@ -259,7 +234,7 @@ static Node *input_tree(void)
 }
 
 /* ---------------- [2] 트리 정보 ---------------- */
-/* 전위 순회하며 개수, 높이(레벨 수), 차수를 구한다. 루트의 depth = 1 */
+/* 전위 순회하며 개수, 높이(레벨 수), 차수를 구함. 루트의 depth = 1 */
 static void collect(const Node *n, int depth, TreeInfo *info)
 {
     int children = (n->left != NULL) + (n->right != NULL);
@@ -294,7 +269,6 @@ static void print_info(const TreeInfo *info)
 /* ---------------- [1] 트리 출력 ---------------- */
 /*
  * prefix: 현재 줄 앞에 붙일 "|   " / "    " 들이 쌓인 버퍼 (len = 현재 길이)
- * 자식을 내려갈 때 4글자를 덧붙이고, 돌아오면 다시 잘라낸다.
  */
 static void print_children(const Node *n, char *prefix, int len)
 {
@@ -329,7 +303,7 @@ static void print_tree(const Node *root, int height)
 /* ---------------- [3] 형태 판별 ---------------- */
 /*
  * 완전 이진트리: 각 노드에 "루트=1, 왼쪽=2i, 오른쪽=2i+1" 번호를 매겼을 때
- * 모든 번호가 1 ~ n 안에 들어오면 완전 이진트리이다.
+ * 모든 번호가 1 ~ n 안에 들어오면 완전 이진트리.
  * (번호가 n을 넘으면 더 내려가지 않으므로 번호가 지나치게 커지지 않는다)
  */
 static int is_complete_rec(const Node *n, int idx, int count)

@@ -1,15 +1,4 @@
-﻿/*
- * tree_manipulator.c
- * 이진트리 조작 프로그램
- *
- * 메뉴: Insert(I), Delete(D), Update(U), Read(R), Print(P)
- * 경로 표기: /A/B/C  (루트부터 목표 노드까지의 데이터를 '/'로 구분하여 나열)
- *
- * 컴파일: gcc -o tree_manipulator tree_manipulator.c
- * 실행:   ./tree_manipulator
- */
-
-#define _CRT_SECURE_NO_WARNINGS  /* MSVC: strtok/strncpy/sprintf 등을 "안전하지 않음" 경고 없이 사용 (표준 C 함수이므로 gcc 등 다른 컴파일러에는 영향 없음) */
+#define _CRT_SECURE_NO_WARNINGS 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +6,7 @@
 #include <ctype.h>
 
 #define MAX_LINE      256
-#define DEFAULT_SIZE  1000   /* create_btree(size)의 기본 용량 */
+#define DEFAULT_SIZE  1000  
 #define MAX_TOKENS    10
 
  /* ================= 이진트리 ADT ================= */
@@ -126,7 +115,7 @@ void destroy_btree(BTree* tree) {
 
 /* ================= 경로 탐색 ================= */
 
-/* path가 "/X/Y/Z" 형식(각 구간은 영문 대문자 한 글자)인지 검사 */
+/* path가 각 구간이 영문 대문자 한 글자인지 검사 */
 int is_valid_path(const char* path) {
     int len = (int)strlen(path);
     if (len < 2 || path[0] != '/') return 0;
@@ -145,7 +134,7 @@ int is_valid_path(const char* path) {
     return 1;
 }
 
-/* path로 노드를 탐색 (경로가 존재하지 않으면 node=NULL) */
+/* path로 노드를 탐색 */
 FindResult find_path(BTree* tree, const char* path) {
     FindResult result = { NULL, NULL, -1 };
     if (tree->root == NULL) return result;
@@ -184,7 +173,7 @@ FindResult find_path(BTree* tree, const char* path) {
 
 /* ================= 명령어 처리 ================= */
 
-/* 대소문자를 구분하지 않는 문자열 비교 (strcasecmp 대체: 표준 C만 사용) */
+/* 대소문자를 구분하지 않는 문자열 비교 */
 int str_equal_ignore_case(const char* a, const char* b) {
     while (*a && *b) {
         if (tolower((unsigned char)*a) != tolower((unsigned char)*b)) return 0;
@@ -197,7 +186,7 @@ int match_cmd(const char* token, const char* full, const char* abbr) {
     return str_equal_ignore_case(token, full) || str_equal_ignore_case(token, abbr);
 }
 
-/* "/ A" 처럼 '/' 바로 뒤에 공백이 들어간 입력을 "/A"로 정규화 */
+/* '/' 바로 뒤에 공백이 들어간 입력을 정규화 */
 void normalize_line(char* line) {
     char result[MAX_LINE];
     int j = 0;

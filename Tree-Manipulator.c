@@ -23,6 +23,12 @@ typedef struct {
     int   count;  /* 현재 노드 수 */
 } BTree;
 
+/* read_child의 반환값: 왼쪽/오른쪽 자식의 데이터 ('\0'이면 자식 없음) */
+typedef struct {
+    char left;
+    char right;
+} ChildInfo;
+
 /* 경로로 찾은 노드 정보: 노드 자신, 부모, 부모 기준 좌/우 여부 */
 typedef struct {
     Node* node;     /* 찾은 노드 (없으면 NULL) */
@@ -61,11 +67,27 @@ BTree* insert_child(BTree* tree, Node* parent, char child, char value) {
     return tree;
 }
 
-/* leaf 노드를 부모로부터 분리하고 삭제 */
-BTree* delete_node(BTree* tree, Node* parent, int is_left, Node* leaf) {
-    if (is_left == -1)      tree->root = NULL;   /* 루트 삭제 -> 빈 트리 */
-    else if (is_left == 1)  parent->left = NULL;
-    else                    parent->right = NULL;
+/* tree에서 target의 부모 노드를 찾아 반환 (root이거나 없으면 NULL) */
+static Node* find_parent_of(Node* cur, Node* target) {
+    if (cur == NULL) return NULL;
+    if (cur->left == target || cur->right == target) return cur;
+    Node* found = find_parent_of(cur->left, target);
+    if (found) return found;
+    return find_parent_of(cur->right, target);
+}
+
+/* tree에서 단말 노드 leaf를 삭제 (ADT 시그니처: delete_node(tree, leaf)) */
+BTree* delete_node(BTree* tree, Node* leaf) {
+    if (tree->root == leaf) {
+        tree->root = NULL;
+    }
+    else {
+        Node* parent = find_parent_of(tree->root, leaf);
+        if (parent) {
+            if (parent->left == leaf)  parent->left = NULL;
+            else                        parent->right = NULL;
+        }
+    }
     free(leaf);
     tree->count--;
     return tree;
@@ -77,10 +99,13 @@ BTree* update_value(BTree* tree, Node* node, char value) {
     return tree;
 }
 
-/* parent의 왼쪽/오른쪽 자식 데이터를 반환 (없으면 '\0') */
-void read_child(Node* parent, char* left_out, char* right_out) {
-    *left_out = parent->left ? parent->left->data : '\0';
-    *right_out = parent->right ? parent->right->data : '\0';
+/* tree에서 parent 노드의 왼쪽/오른쪽 자식 데이터를 반환 (없으면 '\0') */
+ChildInfo read_child(BTree* tree, Node* parent) {
+    (void)tree; /* ADT 시그니처 일치를 위해 유지, 실제로는 사용하지 않음 */
+    ChildInfo info;
+    info.left = parent->left ? parent->left->data : '\0';
+    info.right = parent->right ? parent->right->data : '\0';
+    return info;
 }
 
 /* 트리를 왼쪽으로 눕힌 형태로 재귀 출력 */
@@ -282,7 +307,7 @@ void handle_delete(BTree* tree, char** tok, int n) {
         return;
     }
 
-    delete_node(tree, fr.parent, fr.is_left, fr.node);
+    delete_node(tree, fr.node);
     printf("%s 노드가 삭제되었습니다.\n", path);
 }
 
@@ -329,8 +354,8 @@ void handle_read(BTree* tree, char** tok, int n) {
     FindResult fr = find_path(tree, path);
     if (fr.node == NULL) { printf("오류: 해당 경로의 노드가 존재하지 않습니다.\n"); return; }
 
-    char l, r;
-    read_child(fr.node, &l, &r);
+    ChildInfo info = read_child(tree, fr.node);
+    char l = info.left, r = info.right;
 
     if (l == '\0' && r == '\0') {
         printf("자식 노드가 없습니다.\n");

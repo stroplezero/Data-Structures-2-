@@ -385,6 +385,7 @@ int main(void) {
 
     printf("=== 이진트리 조작 프로그램 ===\n");
     printf("명령어: Insert(I), Delete(D), Update(U), Read(R), Print(P), Quit(Q)\n\n");
+    /* ※ Quit(Q)은 과제 명세에 없는 명령어로, 프로그램 종료 수단이 필요해 임의로 추가 */
 
     while (1) {
         printf("> ");
@@ -407,7 +408,7 @@ int main(void) {
             if (n != 1) printf("오류: Print 명령은 추가 인자를 받지 않습니다.\n");
             else print_btree(tree);
         }
-        else if (match_cmd(tok[0], "quit", "q")) break;
+        else if (match_cmd(tok[0], "quit", "q")) break; 
         else printf("오류: 알 수 없는 명령어입니다.\n");
     }
 

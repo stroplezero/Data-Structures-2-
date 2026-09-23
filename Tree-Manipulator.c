@@ -101,7 +101,7 @@ BTree* update_value(BTree* tree, Node* node, char value) {
 
 /* tree에서 parent 노드의 왼쪽/오른쪽 자식 데이터를 반환 (없으면 '\0') */
 ChildInfo read_child(BTree* tree, Node* parent) {
-    (void)tree; /* ADT 시그니처 일치를 위해 유지, 실제로는 사용하지 않음 */
+    (void)tree; /* ADT 시그니처 일치를 위해 유지 */
     ChildInfo info;
     info.left = parent->left ? parent->left->data : '\0';
     info.right = parent->right ? parent->right->data : '\0';

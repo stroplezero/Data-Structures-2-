@@ -162,10 +162,15 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
             ParseFrame *top = psTop(stack);
             if (top->slot != 0) {
                 errorFlag = 1;
-                if (top->parent->right != NULL)
-                    snprintf(errmsgOut, errmsgLen,
-                             "자식이 3개 이상입니다. 이진트리는 자식을 최대 2개까지만 가질 수 있습니다 (위치 %d).", pos);
-                else
+                if (top->parent->right != NULL) {
+                    int k = pos + 1;   /* 쉼표 바로 뒤(공백 제외)가 ')' 이면 자식이 아니라 쉼표만 남은 경우 */
+                    while (k < len && isspace((unsigned char)str[k])) k++;
+                    if (k < len && str[k] == ')')
+                        snprintf(errmsgOut, errmsgLen, "불필요한 쉼표가 있습니다 (위치 %d).", pos);
+                    else
+                        snprintf(errmsgOut, errmsgLen,
+                                 "자식이 3개 이상입니다. 이진트리는 자식을 최대 2개까지만 가질 수 있습니다 (위치 %d).", pos);
+                } else
                     snprintf(errmsgOut, errmsgLen, "','가 중복되었습니다 (위치 %d).", pos);
                 break;
             }
@@ -185,12 +190,22 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
                 snprintf(errmsgOut, errmsgLen, "괄호 안에 자식 노드가 없습니다 (위치 %d).", pos);
                 break;
             }
+            /* A(B,) 처럼 쉼표 뒤에 오른쪽 자식이 없으면 오류 (왼쪽 자식만 있으면 A(B) 형태로 작성) */
+            if (top->slot == 1 && top->parent->right == NULL) {
+                errorFlag = 1;
+                snprintf(errmsgOut, errmsgLen,
+                         "쉼표 뒤에 오른쪽 자식이 없습니다 (위치 %d). 왼쪽 자식만 있으면 A(B) 형태로 씁니다.", pos);
+                break;
+            }
             psPop(stack);
             lastNode = NULL;
             pos++;
         } else {
             errorFlag = 1;
-            snprintf(errmsgOut, errmsgLen, "잘못된 문자 '%c' (위치 %d).", c, pos);
+            if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F)
+                snprintf(errmsgOut, errmsgLen, "잘못된 문자 '%c' (위치 %d).", c, pos);
+            else   /* 한글 등 여러 바이트 문자나 제어 문자는 그대로 출력하면 깨지므로 위치만 표시 */
+                snprintf(errmsgOut, errmsgLen, "허용되지 않는 문자입니다 (위치 %d). 영문 대문자, '(', ')', ',' 만 사용할 수 있습니다.", pos);
             break;
         }
     }
@@ -218,7 +233,7 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
     return root;
 }
 
-/* ================= 반복적 순회  ================= */
+/* ================= 반복적(iterative) 순회  ================= */
 
 static void preorder(TreeNode *tree) {
     printf("Preorder  :");
@@ -411,11 +426,22 @@ int main(void) {
         printf("입력을 읽을 수 없습니다.\n");
     } else {
         size_t len = strlen(line);
+        int tooLong = 0;
+        if (len == sizeof(line) - 1 && line[len-1] != '\n' && line[len-1] != '\r') {
+            int ch = getc(stdin);              /* 버퍼가 가득 찼는데 입력이 더 남아 있는지 확인 */
+            if (ch != EOF && ch != '\n' && ch != '\r') tooLong = 1;
+        }
         while (len > 0 && (line[len-1] == '\n' || line[len-1] == '\r')) line[--len] = '\0';
 
         int ok;
         char errmsg[256];
-        TreeNode *root = buildTreeFromString(line, &ok, errmsg, sizeof(errmsg));
+        TreeNode *root = NULL;
+        if (tooLong) {
+            ok = 0;
+            snprintf(errmsg, sizeof(errmsg), "입력이 너무 깁니다 (최대 %d자).", (int)sizeof(line) - 1);
+        } else {
+            root = buildTreeFromString(line, &ok, errmsg, sizeof(errmsg));
+        }
 
         if (!ok) {
             printf("\n[오류] 잘못된 괄호 표현식입니다: %s\n", errmsg);

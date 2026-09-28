@@ -24,7 +24,6 @@ static char* dupStr(const char *s) {
     return r;
 }
 
-/* ================= 범용 노드 포인터 스택 ================= */
 typedef struct {
     TreeNode **data;
     int top;
@@ -49,11 +48,9 @@ static void nsPush(NodeStack *s, TreeNode *node) {
 static TreeNode* nsPop(NodeStack *s) { return s->data[(s->top)--]; }
 static void nsDestroy(NodeStack *s) { free(s->data); free(s); }
 
-/* ================= 괄호 표기법 파서 ================= */
-
 typedef struct {
     TreeNode *parent;
-    int slot;   /* 0 = 왼쪽 자식 대기, 1 = 오른쪽 자식 대기 */
+    int slot;
 } ParseFrame;
 
 typedef struct {
@@ -81,7 +78,7 @@ static ParseFrame* psTop(ParseStack *s) { return &s->data[s->top]; }
 static void psPop(ParseStack *s) { (s->top)--; }
 static void psDestroy(ParseStack *s) { free(s->data); free(s); }
 
-static void freeTree(TreeNode *root) {   
+static void freeTree(TreeNode *root) {
     if (!root) return;
     NodeStack *s = nsCreate(16);
     nsPush(s, root);
@@ -98,9 +95,10 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
     int len = (int)strlen(str);
     int pos = 0;
     TreeNode *root = NULL;
-    TreeNode *lastNode = NULL;     
-    TreeNode *unattachedNode = NULL; /* 오류 발생 시 아직 트리에 연결되지 않은 노드를 정리하기 위한 변수 */
+    TreeNode *lastNode = NULL;
+    TreeNode *unattachedNode = NULL;
     int errorFlag = 0;
+    int used[26] = {0};   /* 이미 사용한 노드 이름 표시 (중복 검사용) */
     ParseStack *stack = psCreate(16);
 
     while (pos < len) {
@@ -109,6 +107,21 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
         if (isspace((unsigned char)c)) { pos++; continue; }
 
         if (isupper((unsigned char)c)) {
+            /* 루트 노드는 반드시 'A' */
+            if (root == NULL && psIsEmpty(stack) && c != 'A') {
+                errorFlag = 1;
+                snprintf(errmsgOut, errmsgLen,
+                         "루트 노드는 'A'여야 합니다. 입력된 루트: '%c' (위치 %d).", c, pos);
+                break;
+            }
+            /* 같은 이름의 노드가 이미 있으면 오류 */
+            if (used[c - 'A']) {
+                errorFlag = 1;
+                snprintf(errmsgOut, errmsgLen,
+                         "노드 이름 '%c'가 중복되었습니다 (위치 %d). 노드 이름은 한 번씩만 사용할 수 있습니다.", c, pos);
+                break;
+            }
+            used[c - 'A'] = 1;
             TreeNode *node = makeNode(c);
             if (psIsEmpty(stack)) {
                 if (root != NULL) {
@@ -163,7 +176,7 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
             if (top->slot != 0) {
                 errorFlag = 1;
                 if (top->parent->right != NULL) {
-                    int k = pos + 1;   /* 쉼표 바로 뒤(공백 제외)가 ')' 이면 자식이 아니라 쉼표만 남은 경우 */
+                    int k = pos + 1;
                     while (k < len && isspace((unsigned char)str[k])) k++;
                     if (k < len && str[k] == ')')
                         snprintf(errmsgOut, errmsgLen, "불필요한 쉼표가 있습니다 (위치 %d).", pos);
@@ -184,13 +197,11 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
                 break;
             }
             ParseFrame *top = psTop(stack);
-            /* A(B) 처럼 왼쪽 자식만 있는 경우는 허용, 괄호 안에 자식이 하나도 없으면 오류 */
             if (top->parent->left == NULL && top->parent->right == NULL) {
                 errorFlag = 1;
                 snprintf(errmsgOut, errmsgLen, "괄호 안에 자식 노드가 없습니다 (위치 %d).", pos);
                 break;
             }
-            /* A(B,) 처럼 쉼표 뒤에 오른쪽 자식이 없으면 오류 (왼쪽 자식만 있으면 A(B) 형태로 작성) */
             if (top->slot == 1 && top->parent->right == NULL) {
                 errorFlag = 1;
                 snprintf(errmsgOut, errmsgLen,
@@ -204,7 +215,7 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
             errorFlag = 1;
             if ((unsigned char)c >= 0x20 && (unsigned char)c < 0x7F)
                 snprintf(errmsgOut, errmsgLen, "잘못된 문자 '%c' (위치 %d).", c, pos);
-            else   /* 한글 등 여러 바이트 문자나 제어 문자는 그대로 출력하면 깨지므로 위치만 표시 */
+            else
                 snprintf(errmsgOut, errmsgLen, "허용되지 않는 문자입니다 (위치 %d). 영문 대문자, '(', ')', ',' 만 사용할 수 있습니다.", pos);
             break;
         }
@@ -233,8 +244,6 @@ static TreeNode* buildTreeFromString(const char *str, int *ok, char *errmsgOut, 
     return root;
 }
 
-/* ================= 반복적(iterative) 순회  ================= */
-
 static void preorder(TreeNode *tree) {
     printf("Preorder  :");
     if (tree) {
@@ -242,7 +251,7 @@ static void preorder(TreeNode *tree) {
         nsPush(s, tree);
         while (!nsIsEmpty(s)) {
             TreeNode *node = nsPop(s);
-            printf(" %c", node->data);        
+            printf(" %c", node->data);
             if (node->right) nsPush(s, node->right);
             if (node->left)  nsPush(s, node->left);
         }
@@ -256,12 +265,12 @@ static void inorder(TreeNode *tree) {
     NodeStack *s = nsCreate(16);
     TreeNode *cur = tree;
     while (cur != NULL || !nsIsEmpty(s)) {
-        while (cur != NULL) {                   
+        while (cur != NULL) {
             nsPush(s, cur);
             cur = cur->left;
         }
         cur = nsPop(s);
-        printf(" %c", cur->data);               
+        printf(" %c", cur->data);
         cur = cur->right;
     }
     nsDestroy(s);
@@ -274,13 +283,13 @@ static void postorder(TreeNode *tree) {
         NodeStack *s1 = nsCreate(16);
         NodeStack *s2 = nsCreate(16);
         nsPush(s1, tree);
-        while (!nsIsEmpty(s1)) {                
+        while (!nsIsEmpty(s1)) {
             TreeNode *node = nsPop(s1);
             nsPush(s2, node);
             if (node->left)  nsPush(s1, node->left);
             if (node->right) nsPush(s1, node->right);
         }
-        while (!nsIsEmpty(s2)) {              
+        while (!nsIsEmpty(s2)) {
             TreeNode *node = nsPop(s2);
             printf(" %c", node->data);
         }
@@ -305,12 +314,11 @@ static int countNodes(TreeNode *root) {
     return count;
 }
 
-/* ================= 트리 구조 출력 =================*/
 typedef struct {
     TreeNode *node;
-    char *prefix;  
-    int isLast;    
-    int isRoot;     
+    char *prefix;
+    int isLast;
+    int isRoot;
 } PrintFrame;
 
 typedef struct {
@@ -361,7 +369,6 @@ static void printStructure(TreeNode *root) {
         int hasLeft = (f.node->left != NULL);
         int hasRight = (f.node->right != NULL);
 
-       
         if (hasLeft && hasRight) {
             PrintFrame rf; rf.node = f.node->right; rf.prefix = dupStr(childBasePrefix); rf.isLast = 1; rf.isRoot = 0;
             pfPush(s, rf);
@@ -379,7 +386,6 @@ static void printStructure(TreeNode *root) {
     pfDestroy(s);
 }
 
-/* ================= 구조 + 순회 결과 출력 ================= */
 static void runTraversalsAndPrint(const char *label, TreeNode *root) {
     printf("\n=== %s ===\n", label);
     printf("[트리 구조]\n");
@@ -390,7 +396,6 @@ static void runTraversalsAndPrint(const char *label, TreeNode *root) {
     postorder(root);
 }
 
-/* ================= 내부 테스트 기능 ================= */
 static void runSelfTest(void) {
     printf("\n##################################################\n");
     printf("# 내부 테스트 (노드 10개 이상, 좌/우 서브트리 모두 포함)\n");
@@ -413,7 +418,6 @@ static void runSelfTest(void) {
     freeTree(root);
 }
 
-/* ================= main ================= */
 int main(void) {
     char line[1024];
 
@@ -428,7 +432,7 @@ int main(void) {
         size_t len = strlen(line);
         int tooLong = 0;
         if (len == sizeof(line) - 1 && line[len-1] != '\n' && line[len-1] != '\r') {
-            int ch = getc(stdin);              /* 버퍼가 가득 찼는데 입력이 더 남아 있는지 확인 */
+            int ch = getc(stdin);
             if (ch != EOF && ch != '\n' && ch != '\r') tooLong = 1;
         }
         while (len > 0 && (line[len-1] == '\n' || line[len-1] == '\r')) line[--len] = '\0';

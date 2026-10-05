@@ -83,8 +83,7 @@ BST의 탐색 비용은 **트리의 높이와 노드의 깊이**로 결정되며
 
 ## 5. 실행 방법
 ```
-gcc -o search_compare search_compare.c
-./search_compare
+https://github.com/stroplezero/Data-Structures-2-/blob/main/Project5/search_compare.c
 ```
 
 ## 6. 참고: 실제 실행 화면

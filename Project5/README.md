@@ -81,10 +81,10 @@ BST의 탐색 비용은 **트리의 높이와 노드의 깊이**로 결정되며
 3. BST의 이점은 트리가 균형에 가까울 때 성립한다. 삽입 순서가 나쁘면 BST의 높이가 n에 가까워져 순차 탐색 수준으로 떨어진다.
 4. 이번 실험은 탐색 대상의 86%가 실패였기 때문에 순차 탐색의 불리함이 크게 나타났다. 실행할 때마다(난수 시드에 따라) 수치는 달라질 수 있으나, 경향은 같다.
 
-## 5. 실행 방법
-```
-https://github.com/stroplezero/Data-Structures-2-/blob/main/Project5/search_compare.c
-```
+## 5. 소스 코드
+
+[search_compare.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project5/search_compare.c)
+
 
 ## 6. 참고: 실제 실행 화면
 

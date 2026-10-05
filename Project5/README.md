@@ -96,7 +96,7 @@ README의 분석은 아래 실행 결과를 기준으로 작성했다.
 ![데이터 생성 및 BST 생성 결과](https://github.com/user-attachments/assets/7d22c7bc-5ffc-48af-a064-e5241357f969)
 
 ### 6.2 탐색 결과 (50회)
-![탐색 결과 표1](https://github.com/user-attachments/assets/51e54cd3-f614-4802-9f5d-be74c2527773)
+![탐색 결과 표1](https://github.com/user-attachments/assets/51e54cd3-f614-4802-9f5d-be74c2527773)  
 ![탐색 결과 표2](https://github.com/user-attachments/assets/9b6d453c-cfc1-483e-8443-0320d4fe51b9)
 
 ### 6.3 총합·평균 및 비용 분석

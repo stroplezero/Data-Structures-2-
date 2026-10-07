@@ -96,8 +96,6 @@ README의 분석은 아래 실행 결과를 기준으로 작성했다.
 
 ### 6.2 탐색 결과 (50회)  
 
-요약  
-
 ![탐색 결과 요약](https://github.com/user-attachments/assets/218e2799-de64-402b-beb8-d49c74b32586)  
 
 <details>

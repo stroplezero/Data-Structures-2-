@@ -94,7 +94,7 @@ AVL 트리는 BST보다 높이를 15에서 8로 줄였고, 평균 탐색 비교 
 
 ## 5. 소스 코드
 
-[search_compare.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project5/search_compare.c)
+[search_compare_AVL.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project6/search_compare_AVL.c)
 
 ## 6. 참고: 실제 실행 화면
 

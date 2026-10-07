@@ -95,17 +95,18 @@ AVL 트리는 BST보다 높이를 15에서 8로 줄였고, 평균 탐색 비교 
 ## 참고: 실제 실행 화면
 README의 분석은 아래 실행 결과를 기준으로 작성했다.
 
-6.1 생성된 데이터와 각 자료구조의 생성 비용
+6.1 생성된 데이터와 각 자료구조의 생성 비용  
+
 ![생성된 데이터 및 생성 비용](https://github.com/user-attachments/assets/b1016cd2-ee2a-4a9a-906d-7dcc7de6120d)  
 
-6.2 탐색 결과 (50회)
-요약
+6.2 탐색 결과 (50회)  
+
+요약  
+
 ![탐색 결과 요약](https://github.com/user-attachments/assets/218e2799-de64-402b-beb8-d49c74b32586)  
 
 <details>
-<summary>탐색 결과 상세 보기 (클릭하여 펼치기)</summary>
-
-<br>
+<summary>탐색 결과 상세 보기 (클릭하여 펼치기)</summary>  
 
 ![탐색 결과 상세1](https://github.com/user-attachments/assets/474862a6-52ea-4787-8994-595e6bd17bec)  
 ![탐색 결과 상세2](https://github.com/user-attachments/assets/b9db04a2-796d-479b-9eca-bb85c21779f8)  
@@ -116,9 +117,10 @@ README의 분석은 아래 실행 결과를 기준으로 작성했다.
 ![탐색 결과 상세7](https://github.com/user-attachments/assets/8a3361ac-881d-48d1-a585-8d6ffeb65452)  
 ![탐색 결과 상세8](https://github.com/user-attachments/assets/185d4f84-5b1d-4e88-a629-323706515433)  
 ![탐색 결과 요약9](https://github.com/user-attachments/assets/ea3b7452-ecc7-4aaa-b031-d9c1ad09e119)  
-![탐색 결과 상세10](https://github.com/user-attachments/assets/de554ca4-a31e-43be-88d2-9bb456dbc4de)  
+![탐색 결과 상세10](https://github.com/user-attachments/assets/de554ca4-a31e-43be-88d2-9bb456dbc4de)   
 
 </details>  
 
-6.3 총합 및 평균 비교 횟수
+6.3 총합 및 평균 비교 횟수  
+
 ![총합 및 평균 비교 횟수](https://github.com/user-attachments/assets/b44c7bf8-aade-4f2a-bc77-99a582c518cb)

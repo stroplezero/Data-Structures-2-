@@ -42,7 +42,7 @@
 
 ### 2.3 프로그램 출력 원문
 
-!(실제 실행결과)()
+![실제 실행결과](https://github.com/user-attachments/assets/5c040d28-a02b-4b97-a1ff-cecc45391743)
 
 Dense 정점 31의 인접 정점은 행렬과 리스트 모두 71개이며 정점 집합이 같곧, 출력 순서만 다르다.  
 행렬은 열 번호 순(오름차순)으로 확인하고, 리스트는 노드를 맨 앞에 삽입했기 때문에 삽입의 역순으로 나온다.
@@ -121,6 +121,4 @@ Dense 정점 31의 인접 정점은 행렬과 리스트 모두 71개이며 정�
 
 ## 8. 소스코드
 
-```
-
-```
+[graph.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project7/graph.c)

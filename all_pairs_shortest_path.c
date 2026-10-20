@@ -17,14 +17,14 @@ static void generateGraph(void)
 {
     int perm[V], i, j, t, cnt = 0;
 
-    /* 정점 순서를 무작위로 섞는다 */
+    /* 정점 순서를 무작위로 섞음 */
     for (i = 0; i < V; i++) perm[i] = i;
     for (i = V - 1; i > 0; i--) {
         j = rand() % (i + 1);
         t = perm[i]; perm[i] = perm[j]; perm[j] = t;
     }
 
-    /* 먼저 신장트리(V-1개 간선)를 만들어 연결 그래프를 보장한다 */
+    /* 신장트리(V-1개 간선)를 만들어 연결 그래프를 보장함 */
     for (i = 1; i < V; i++) {
         int a = perm[i];
         int b = perm[rand() % i];
@@ -35,7 +35,7 @@ static void generateGraph(void)
         cnt++;
     }
 
-    /* 나머지 간선은 자기 자신/중복이 아닌 것만 무작위로 추가한다 */
+    /* 나머지 간선은 자기 자신/중복이 아닌 것만 무작위로 추가 */
     while (cnt < E) {
         int a = rand() % V;
         int b = rand() % V;

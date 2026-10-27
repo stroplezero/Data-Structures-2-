@@ -190,5 +190,3 @@ int main(void) {
     stabilityTest();
     return 0;
 }
-
-이 코드가 제대로 실행안되는 이유가 뭐야? 

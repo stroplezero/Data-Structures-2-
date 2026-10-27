@@ -219,7 +219,7 @@ move = useGE ? (a[j].key1 >= cur.key1) : (a[j].key1 > cur.key1);
 5. 조기 종료 여부와 `>` 대 `>=`라는 조건이 성능과 안정성에 실질적인 차이를 만들 수 있음을 알 수 있다.
 
 ## 8. 실제 실행 결과
-[← 0. 개요로 돌아가기](##0-개요)
+[← 0. 개요로 돌아가기](#0-개요)
 
 ![실행결과1](https://github.com/user-attachments/assets/0ecbed49-0b03-4dc4-9417-ea8dd7c8c22a)
 ![실행결과2](https://github.com/user-attachments/assets/1dde1881-b4f3-468a-9632-4bfa29dd41c3)

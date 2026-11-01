@@ -106,7 +106,7 @@ n=20,000에서 삽입 정렬은 약 1억 회를 비교했지만 쉘 정렬은 �
 
 ## 5. 소스코드
 
-sort_performance.c[https://github.com/stroplezero/Data-Structures-2-/blob/main/Project11/sort_perfomance.c]
+[sort_performance.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project11/sort_perfomance.c)
 
 ## 6. 실행 결과
 [<- 2. 결과로 돌아가기](#2-결과)

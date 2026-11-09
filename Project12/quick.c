@@ -69,7 +69,6 @@ static void quick_sort(int a[], int lo, int hi, PivotType type) {
     quick_sort(a, p + 1, hi, type);
 }
 
-
 static int is_sorted(const int a[], int n) {
     for (int i = 1; i < n; i++)
         if (a[i - 1] > a[i]) return 0;

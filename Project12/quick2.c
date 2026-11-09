@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 #define N        10000
 #define REPEAT   200      /* 반복 측정 횟수 (평균 사용) */
 
-static int rand_int(void) { return (rand() << 15) | rand(); }
+static int rand_int(void) { return ((rand() & 0x7FFF) << 15) | (rand() & 0x7FFF); }
 static void swap(int *a, int *b) { int t = *a; *a = *b; *b = t; }
 
-/* 세 원소의 중앙값 위치를 골라 a[lo]로 옮김 */
+/* 세 원소의 중앙값을 a[lo]로 옮김 */
 static void choose_median3(int a[], int lo, int hi) {
     int mid = lo + (hi - lo) / 2;
     int x = a[lo], y = a[mid], z = a[hi];
@@ -24,14 +27,14 @@ static void choose_median3(int a[], int lo, int hi) {
     if (p != lo) swap(&a[lo], &a[p]);
 }
 
-/* Hoare 방식 분할 (두 방법이 공통 사용), 피벗은 a[lo] */
+/* Hoare 방식 분할 (재귀/반복 공통), 피벗은 a[lo] */
 static int partition(int a[], int lo, int hi) {
     choose_median3(a, lo, hi);
     int pivot = a[lo];
     int i = lo, j = hi + 1;
     while (1) {
         while (++i <= hi && a[i] < pivot) ;
-        while (a[--j] > pivot) ;          /* j==lo에서 pivot과 같아 멈춤 */
+        while (a[--j] > pivot) ;          /* a[lo]==pivot 이므로 j는 lo에서 멈춤 */
         if (i >= j) break;
         swap(&a[i], &a[j]);
     }
@@ -39,7 +42,7 @@ static int partition(int a[], int lo, int hi) {
     return j;
 }
 
-/* 1) 재귀적 퀵 정렬 */
+/* 1) 재귀적 퀵 정렬 (양쪽 모두 단순 재귀) */
 static void quick_recursive(int a[], int lo, int hi) {
     if (lo >= hi) return;
     int p = partition(a, lo, hi);
@@ -47,9 +50,11 @@ static void quick_recursive(int a[], int lo, int hi) {
     quick_recursive(a, p + 1, hi);
 }
 
-/* 2) 반복적 퀵 정렬 (명시적 스택) */
+/* 2) 반복적 퀵 정렬 (명시적 스택)
+   큰 구간을 먼저 push, 작은 구간을 나중에 push(먼저 처리) -> 스택 깊이 O(log n) */
+#define STACK_MAX 128
 static void quick_iterative(int a[], int n) {
-    int *stack = (int *)malloc(sizeof(int) * 2 * (n + 1));
+    int stack[STACK_MAX];             /* (lo, hi) 쌍, 정렬 시간에 malloc 비용 제외 */
     int top = -1;
     stack[++top] = 0;
     stack[++top] = n - 1;
@@ -58,10 +63,14 @@ static void quick_iterative(int a[], int n) {
         int lo = stack[top--];
         if (lo >= hi) continue;
         int p = partition(a, lo, hi);
-        stack[++top] = lo;     stack[++top] = p - 1;
-        stack[++top] = p + 1;  stack[++top] = hi;
+        if (p - lo > hi - p) {        /* 왼쪽이 크면 왼쪽 먼저 push */
+            stack[++top] = lo;     stack[++top] = p - 1;
+            stack[++top] = p + 1;  stack[++top] = hi;
+        } else {
+            stack[++top] = p + 1;  stack[++top] = hi;
+            stack[++top] = lo;     stack[++top] = p - 1;
+        }
     }
-    free(stack);
 }
 
 static int is_sorted(const int a[], int n) {
@@ -70,10 +79,16 @@ static int is_sorted(const int a[], int n) {
 }
 
 static double now_ms(void) {
+#ifdef _WIN32
     LARGE_INTEGER f, c;
     QueryPerformanceFrequency(&f);
     QueryPerformanceCounter(&c);
     return (double)c.QuadPart * 1000.0 / (double)f.QuadPart;
+#else
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return ts.tv_sec * 1000.0 + ts.tv_nsec / 1e6;
+#endif
 }
 
 int main(void) {
@@ -81,8 +96,16 @@ int main(void) {
     int *work = (int *)malloc(sizeof(int) * N);
     double t_rec = 0, t_iter = 0;
 
+    if (!orig || !work) { printf("메모리 할당 실패\n"); return 1; }
+
     srand((unsigned)time(NULL));
     for (int i = 0; i < N; i++) orig[i] = rand_int() % 100000;
+
+    /* 워밍업 (캐시/CPU 상태 안정화, 측정 제외) */
+    memcpy(work, orig, sizeof(int) * N);
+    quick_recursive(work, 0, N - 1);
+    memcpy(work, orig, sizeof(int) * N);
+    quick_iterative(work, N);
 
     for (int r = 0; r < REPEAT; r++) {
         double s, e;

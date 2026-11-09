@@ -8,12 +8,12 @@ static long long cmp_count;
 
 static void swap(int *a, int *b) { int t = *a; *a = *b; *b = t; }
 
-/* 난수 생성: Windows의 rand()는 최대 32767이라 두 번 조합 */
+/* Windows의 rand()는 최대 32767이므로 두 번 조합 (30비트, 음수 없음) */
 static int rand_int(void) {
-    return (rand() << 15) | rand();
+    return ((rand() & 0x7FFF) << 15) | (rand() & 0x7FFF);
 }
 
-/* 구간 [lo, hi]에서 피벗 위치를 고르고 lo로 옮긴다 */
+/* 구간 [lo, hi]에서 피벗 위치를 고르고 a[lo]로 옮긴다 */
 static void choose_pivot(int a[], int lo, int hi, PivotType type) {
     int p = lo;
     if (type == RANDOM) {
@@ -21,35 +21,39 @@ static void choose_pivot(int a[], int lo, int hi, PivotType type) {
     } else if (type == MEDIAN3) {
         int mid = lo + (hi - lo) / 2;
         int x = a[lo], y = a[mid], z = a[hi];
-        /* 중앙값 결정을 위한 비교 (최대 3회) 포함 */
-        cmp_count++;
+        cmp_count++;                           /* 중앙값 결정 비교 (2~3회) */
         if (x < y) {
             cmp_count++;
-            if (y < z) p = mid;            /* x<y<z */
+            if (y < z) p = mid;                /* x<y<z */
             else {
                 cmp_count++;
-                p = (x < z) ? hi : lo;     /* x<z<=y 또는 z<=x<y */
+                p = (x < z) ? hi : lo;
             }
         } else {
             cmp_count++;
-            if (x < z) p = lo;             /* y<=x<z */
+            if (x < z) p = lo;                 /* y<=x<z */
             else {
                 cmp_count++;
-                p = (y < z) ? hi : mid;    /* y<z<=x 또는 z<=y<=x */
+                p = (y < z) ? hi : mid;
             }
         }
     }
     if (p != lo) swap(&a[lo], &a[p]);
 }
 
-/* Hoare 방식 분할: 피벗은 a[lo]에 위치 (모든 방법 동일) */
+/* Hoare 방식 분할: 피벗은 a[lo], 세 방법 모두 동일 */
 static int partition(int a[], int lo, int hi, PivotType type) {
     choose_pivot(a, lo, hi, type);
     int pivot = a[lo];
     int i = lo, j = hi + 1;
     while (1) {
-        do { i++; if (i > hi) break; cmp_count++; } while (a[i] < pivot);
-        do { j--; cmp_count++; } while (a[j] > pivot);   /* j==lo면 a[lo]==pivot에서 멈춤 */
+        /* 범위 검사(i<=hi)는 세지 않고, 값 비교 a[i]<pivot만 센다 */
+        while (++i <= hi) {
+            cmp_count++;
+            if (!(a[i] < pivot)) break;
+        }
+        /* a[lo]==pivot 이므로 j는 lo에서 반드시 멈춘다 */
+        do { --j; cmp_count++; } while (a[j] > pivot);
         if (i >= j) break;
         swap(&a[i], &a[j]);
     }
@@ -57,7 +61,7 @@ static int partition(int a[], int lo, int hi, PivotType type) {
     return j;
 }
 
-/* 재귀 깊이 문제(First 피벗 최악의 경우)를 피하려고 작은 쪽만 재귀, 큰 쪽은 반복 */
+/* 작은 쪽만 재귀, 큰 쪽은 반복 -> 재귀 깊이 O(log n) */
 static void quick_sort(int a[], int lo, int hi, PivotType type) {
     while (lo < hi) {
         int p = partition(a, lo, hi, type);

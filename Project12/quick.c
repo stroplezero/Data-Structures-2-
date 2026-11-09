@@ -61,19 +61,14 @@ static int partition(int a[], int lo, int hi, PivotType type) {
     return j;
 }
 
-/* 작은 쪽만 재귀, 큰 쪽은 반복 -> 재귀 깊이 O(log n) */
+/* 순수 재귀 퀵 정렬 */
 static void quick_sort(int a[], int lo, int hi, PivotType type) {
-    while (lo < hi) {
-        int p = partition(a, lo, hi, type);
-        if (p - lo < hi - p) {
-            quick_sort(a, lo, p - 1, type);
-            lo = p + 1;
-        } else {
-            quick_sort(a, p + 1, hi, type);
-            hi = p - 1;
-        }
-    }
+    if (lo >= hi) return;
+    int p = partition(a, lo, hi, type);
+    quick_sort(a, lo, p - 1, type);
+    quick_sort(a, p + 1, hi, type);
 }
+
 
 static int is_sorted(const int a[], int n) {
     for (int i = 1; i < n; i++)

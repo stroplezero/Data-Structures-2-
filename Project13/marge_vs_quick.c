@@ -34,7 +34,7 @@ static double now_ms(void) {
 #endif
 }
 
-/* ---------------- 퀵 정렬 (본 과제와 동일) ---------------- */
+/* ---------------- 퀵 정렬 ---------------- */
 static void choose_pivot(int a[], int lo, int hi, PivotType type) {
     int p = lo;
     if (type == RANDOM) {

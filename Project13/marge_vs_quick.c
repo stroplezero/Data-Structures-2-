@@ -13,7 +13,8 @@ typedef enum { FIRST, RANDOM, MEDIAN3 } PivotType;
 static long long cmp_count;     /* 숫자 비교 횟수 */
 static int cur_depth, max_depth; /* 재귀 깊이 (메모리 계산용) */
 
-/* 재귀 호출 1회(스택 프레임)의 추정 크기: 인자·지역변수 + 반환 주소. */
+/* 재귀 호출 1회(스택 프레임)의 근사 크기: 포인터 + int 4개 (+ enum) + 반환 주소.
+   64비트 환경 가정. */
 #define QUICK_FRAME  (sizeof(int *) + 4 * sizeof(int) + sizeof(PivotType) + sizeof(void *))
 #define MERGE_FRAME  (sizeof(int *) + 4 * sizeof(int) + sizeof(void *))
 
@@ -111,7 +112,7 @@ static int is_sorted(const int a[], int n) {
 }
 
 /* alg: 0=Merge, 1=First, 2=Random, 3=Median3
-   결과: 비교 횟수(첫 실행), 평균 시간(ms), 메모리(Byte) */
+   결과: 비교 횟수·메모리(첫 번째 반복의 값), 실행시간(REPEAT회 평균, ms) */
 static void run(int alg, const int orig[], int work[], int tmp[], int n,
                 long long *cmp, double *ms, size_t *mem) {
     double total = 0;

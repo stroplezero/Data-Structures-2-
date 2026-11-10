@@ -13,12 +13,14 @@ typedef enum { FIRST, RANDOM, MEDIAN3 } PivotType;
 static long long cmp_count;     /* 숫자 비교 횟수 */
 static int cur_depth, max_depth; /* 재귀 깊이 (메모리 계산용) */
 
-/* 재귀 호출 1회(스택 프레임)의 근사 크기: 포인터 + int 4개 (+ enum) + 반환 주소.
-   64비트 환경 가정. */
-#define QUICK_FRAME  (sizeof(int *) + 4 * sizeof(int) + sizeof(PivotType) + sizeof(void *))
-#define MERGE_FRAME  (sizeof(int *) + 4 * sizeof(int) + sizeof(void *))
+/* 재귀 호출 1회(스택 프레임)의 근사 크기: 실제 인자 + 지역변수 + 반환 주소.
+   64비트 환경 가정 (포인터 8, int 4, enum 4).
+   quick_sort(a, lo, hi, type), 지역변수 p
+   merge_sort(a, tmp, lo, hi),  지역변수 mid */
+#define QUICK_FRAME  (sizeof(int *) + 3 * sizeof(int) + sizeof(PivotType) + sizeof(void *))      /* 8+12+4+8 = 32 */
+#define MERGE_FRAME  (2 * sizeof(int *) + 3 * sizeof(int) + sizeof(void *))                       /* 16+12+8 = 36 */
 
-static void swap(int *a, int *b) { int t = *a; *a = *b; *b = t; }
+static void swap(int* a, int* b) { int t = *a; *a = *b; *b = t; }
 static int rand_int(void) { return ((rand() & 0x7FFF) << 15) | (rand() & 0x7FFF); }
 
 /* ---------------- 타이머 ---------------- */
@@ -35,12 +37,13 @@ static double now_ms(void) {
 #endif
 }
 
-/* ---------------- 퀵 정렬 ---------------- */
+/* ---------------- 퀵 정렬 (본 과제와 동일) ---------------- */
 static void choose_pivot(int a[], int lo, int hi, PivotType type) {
     int p = lo;
     if (type == RANDOM) {
         p = lo + rand_int() % (hi - lo + 1);          /* 비교 아님 */
-    } else if (type == MEDIAN3) {
+    }
+    else if (type == MEDIAN3) {
         int mid = lo + (hi - lo) / 2;
         int x = a[lo], y = a[mid], z = a[hi];
         cmp_count++;
@@ -48,7 +51,8 @@ static void choose_pivot(int a[], int lo, int hi, PivotType type) {
             cmp_count++;
             if (y < z) p = mid;
             else { cmp_count++; p = (x < z) ? hi : lo; }
-        } else {
+        }
+        else {
             cmp_count++;
             if (x < z) p = lo;
             else { cmp_count++; p = (y < z) ? hi : mid; }
@@ -112,9 +116,9 @@ static int is_sorted(const int a[], int n) {
 }
 
 /* alg: 0=Merge, 1=First, 2=Random, 3=Median3
-   결과: 비교 횟수·메모리(첫 번째 반복의 값), 실행시간(REPEAT회 평균, ms) */
+   결과: 비교 횟수(첫 실행), 평균 시간(ms), 메모리(Byte) */
 static void run(int alg, const int orig[], int work[], int tmp[], int n,
-                long long *cmp, double *ms, size_t *mem) {
+    long long* cmp, double* ms, size_t* mem) {
     double total = 0;
     for (int r = 0; r < REPEAT; r++) {
         memcpy(work, orig, sizeof(int) * n);        /* 복사: 측정 제외 */
@@ -130,7 +134,7 @@ static void run(int alg, const int orig[], int work[], int tmp[], int n,
         if (r == 0) {
             *cmp = cmp_count;
             *mem = (alg == 0) ? sizeof(int) * (size_t)n + (size_t)max_depth * MERGE_FRAME
-                              : (size_t)max_depth * QUICK_FRAME;
+                : (size_t)max_depth * QUICK_FRAME;
         }
     }
     *ms = total / REPEAT;
@@ -138,15 +142,15 @@ static void run(int alg, const int orig[], int work[], int tmp[], int n,
 
 int main(void) {
     int sizes[] = { 1000, 2000, 4000, 8000, 16000, 20000 };
-    const char *names[] = { "Merge Sort", "Quick (First)", "Quick (Random)", "Quick (Median3)" };
+    const char* names[] = { "Merge Sort", "Quick (First)", "Quick (Random)", "Quick (Median3)" };
 
     srand((unsigned)time(NULL));
 
     for (int s = 0; s < 6; s++) {
         int n = sizes[s];
-        int *orig = malloc(sizeof(int) * n);
-        int *work = malloc(sizeof(int) * n);
-        int *tmp  = malloc(sizeof(int) * n);   /* 병합 정렬 임시 배열 */
+        int* orig = malloc(sizeof(int) * n);
+        int* work = malloc(sizeof(int) * n);
+        int* tmp = malloc(sizeof(int) * n);   /* 병합 정렬 임시 배열 */
         if (!orig || !work || !tmp) { printf("메모리 할당 실패\n"); return 1; }
 
         for (int i = 0; i < n; i++) orig[i] = rand_int() % 100000;

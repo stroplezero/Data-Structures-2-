@@ -113,5 +113,6 @@ n이 1,000에서 20,000으로 20배 커졌을 때 증가 배율은 다음과 같
 [quick_AVL.c](https://github.com/stroplezero/Data-Structures-2-/blob/main/Project15/quick_AVL.c)
 
 ## 7. 실제 실행 결과
+[<- 2. 결과 요약으로 돌아가기](#2-결과-요약)
 ![실제실행결과1](https://github.com/user-attachments/assets/163ce59d-0f2b-4bcb-af32-f05d0a9a2489)  
 ![실제실행결과2](https://github.com/user-attachments/assets/acd8b72f-26bb-40e2-b8df-043c91ee726a)
